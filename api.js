@@ -1,3 +1,5 @@
+const childProcess = require('child_process')
+
 const knex = require('./db')
 const { getStudentGradesAndDetails } = require('./student-utils')
 const grades = require('./grades.json')
@@ -37,5 +39,10 @@ async function getStudentGradesReport (req, res, next) {
 }
 
 async function getCourseGradesReport (req, res, next) {
-  throw new Error('This method has not been implemented yet.')
+  const prc = childProcess.fork('./getCourseGradesReport.js')
+  prc
+    .on('message', (data) => {
+      res.send(data)
+    })
+    .on('error', next)
 }
