@@ -5,6 +5,8 @@ const port = (process.env.PORT = process.env.PORT || require('get-port-sync')())
 const endpoint = `http://localhost:${port}`
 
 const server = require('./server')
+const grades = require('./grades.json')
+const { getStudentGradesAndDetails } = require('./student-utils')
 
 tape('health', async function (t) {
   const url = `${endpoint}/health`
@@ -44,6 +46,59 @@ tape('getStudent', async function (t) {
       last_login: '1628746706627.0',
       ip_address: '218.151.239.16'
     }, data, 'should equal expected student')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
+
+tape('do not getStudent', async function (t) {
+  const url = `${endpoint}/student/-44`
+  try {
+    const { data, response } = await jsonist.get(url)
+    if (response.statusCode !== 200) {
+      throw new Error('Error connecting to sqlite database; did you initialize it by running `npm run init-db`?')
+    }
+    t.isEqual(data, null, 'should be null')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
+
+tape('do not getStudentGradesAndDetails', async function (t) {
+  const data = await getStudentGradesAndDetails(grades, -2)
+  try {
+    t.isEqual(data, undefined, 'should be undefined')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
+
+tape('getStudentGradesAndDetails', async function (t) {
+  try {
+    const data = await getStudentGradesAndDetails(grades, 3556)
+    t.deepEqual({
+      id: 3556,
+      first_name: 'Floy',
+      last_name: 'Walker',
+      email: 'Floy_Walker@hotmail.com',
+      is_registered: 1,
+      is_approved: 0,
+      password_hash: '4e2281d392f8b353767918febb9871633b258018',
+      address: '5033 Zulauf Common Suite 465',
+      city: 'Pomona',
+      state: 'NH',
+      zip: '38963-0488',
+      phone: '(932) 820-6677 x31142',
+      created: '1628782818068.0',
+      last_login: '1628744486508.0',
+      ip_address: '47.63.154.15',
+      grades: []
+    }
+
+    , data, 'should equal expected student and grades')
     t.end()
   } catch (e) {
     t.error(e)
