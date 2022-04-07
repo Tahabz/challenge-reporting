@@ -1,5 +1,7 @@
 const grades = require('../grades.json')
 
+process.send(getCoursesStats(grades))
+
 function getCoursesStats (grades) {
   const gradesByCourse = groupGradesByCourse(grades)
   return buildStatsObject(gradesByCourse)
@@ -28,5 +30,3 @@ function buildStatsObject (gradesByCourse) {
 function getAverage (arr) {
   return arr.reduce((acc, curr) => acc + curr, 0) / arr.length
 }
-
-process.send(getCoursesStats(grades))
