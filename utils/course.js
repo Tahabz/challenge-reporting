@@ -19,13 +19,14 @@ function buildStatsObject (gradesByCourse) {
       [course]: {
         maxGrade: Math.max(...gradesByCourse[course]),
         minGrade: Math.min(...gradesByCourse[course]),
-        average: (
-          gradesByCourse[course].reduce((a, v) => a + v, 0) /
-          gradesByCourse[course].length
-        ).toFixed(2)
+        average: getAverage(gradesByCourse[course]).toFixed(2)
       }
     }))
   )
+}
+
+function getAverage (arr) {
+  return arr.reduce((acc, curr) => acc + curr, 0) / arr.length
 }
 
 process.send(getCoursesStats(grades))
