@@ -1,4 +1,4 @@
-const grades = require('./grades.json')
+const grades = require('../grades.json')
 
 function getCoursesStats (grades) {
   const gradesByCourse = groupGradesByCourse(grades)
