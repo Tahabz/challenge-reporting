@@ -76,7 +76,7 @@ tape('do not getStudentGradesAndDetails', async function (t) {
   }
 })
 
-tape('getStudentGradesAndDetails', async function (t) {
+tape('getCoursesStats', async function (t) {
   try {
     const data = await getStudentGradesAndDetails(grades, 3556)
     t.deepEqual({
@@ -99,6 +99,46 @@ tape('getStudentGradesAndDetails', async function (t) {
     }
 
     , data, 'should equal expected student and grades')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
+
+tape('getStudent', async function (t) {
+  const url = `${endpoint}/course/all/grades`
+  try {
+    const { data, response } = await jsonist.get(url)
+    if (response.statusCode !== 200) {
+      throw new Error('Error connecting to sqlite database; did you initialize it by running `npm run init-db`?')
+    }
+    t.deepEqual({
+      Calculus: {
+        maxGrade: 100,
+        minGrade: 0,
+        average: '50.09'
+      },
+      Microeconomics: {
+        maxGrade: 100,
+        minGrade: 0,
+        average: '49.81'
+      },
+      Statistics: {
+        maxGrade: 100,
+        minGrade: 0,
+        average: '50.02'
+      },
+      Astronomy: {
+        maxGrade: 100,
+        minGrade: 0,
+        average: '50.04'
+      },
+      Philosophy: {
+        maxGrade: 100,
+        minGrade: 0,
+        average: '50.02'
+      }
+    }, data, 'should equal expected course stats')
     t.end()
   } catch (e) {
     t.error(e)
