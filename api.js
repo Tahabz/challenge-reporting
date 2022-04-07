@@ -1,4 +1,6 @@
 const knex = require('./db')
+const { getStudentGradesAndDetails } = require('./student-utils')
+const grades = require('./grades.json')
 
 module.exports = {
   getHealth,
@@ -27,7 +29,7 @@ async function getStudent (req, res, next) {
 }
 
 async function getStudentGradesReport (req, res, next) {
-  throw new Error('This method has not been implemented yet.')
+  res.json(await getStudentGradesAndDetails(grades, req.params.id))
 }
 
 async function getCourseGradesReport (req, res, next) {
