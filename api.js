@@ -1,7 +1,7 @@
 const childProcess = require('child_process')
 
 const knex = require('./db')
-const { getStudentGradesAndDetails } = require('./student-utils')
+const { getStudentGradesAndDetails } = require('./utils/student')
 const grades = require('./grades.json')
 
 module.exports = {
@@ -39,7 +39,7 @@ async function getStudentGradesReport (req, res, next) {
 }
 
 async function getCourseGradesReport (req, res, next) {
-  const prc = childProcess.fork('./getCourseGradesReport.js')
+  const prc = childProcess.fork('./utils/course.js')
   prc
     .on('message', (data) => {
       res.send(data)

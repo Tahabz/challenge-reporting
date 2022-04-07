@@ -6,7 +6,7 @@ const endpoint = `http://localhost:${port}`
 
 const server = require('./server')
 const grades = require('./grades.json')
-const { getStudentGradesAndDetails } = require('./student-utils')
+const { getStudentGradesAndDetails } = require('./utils/student')
 
 tape('health', async function (t) {
   const url = `${endpoint}/health`
