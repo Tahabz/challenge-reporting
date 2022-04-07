@@ -41,8 +41,8 @@ async function getStudentGradesReport (req, res, next) {
 async function getCourseGradesReport (req, res, next) {
   const prc = childProcess.fork('./utils/course.js')
   prc
-    .on('message', (data) => {
-      res.send(data)
+    .on('message', (coursesStats) => {
+      res.send(coursesStats)
     })
     .on('error', next)
 }
