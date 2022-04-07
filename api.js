@@ -29,7 +29,11 @@ async function getStudent (req, res, next) {
 }
 
 async function getStudentGradesReport (req, res, next) {
-  res.json(await getStudentGradesAndDetails(grades, req.params.id))
+  try {
+    res.json(await getStudentGradesAndDetails(grades, req.params.id))
+  } catch (e) {
+    next(e)
+  }
 }
 
 async function getCourseGradesReport (req, res, next) {
