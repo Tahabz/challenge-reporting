@@ -6,10 +6,10 @@ function getCoursesStats (grades) {
 }
 
 function groupGradesByCourse (grades) {
-  return grades.reduce((acc, gradeInfo) => {
-    if (!Array.isArray(acc[gradeInfo.course])) acc[gradeInfo.course] = []
-    acc[gradeInfo.course].push(gradeInfo.grade)
-    return acc
+  return grades.reduce((grades, gradeInfo) => {
+    if (!Array.isArray(grades[gradeInfo.course])) grades[gradeInfo.course] = []
+    grades[gradeInfo.course].push(gradeInfo.grade)
+    return grades
   }, {})
 }
 
