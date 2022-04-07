@@ -18,7 +18,12 @@ async function getHealth (req, res, next) {
 }
 
 async function getStudent (req, res, next) {
-  throw new Error('This method has not been implemented yet.')
+  try {
+    const student = await knex('students').where({ id: req.params.id })
+    res.json(student[0])
+  } catch (e) {
+    next(e)
+  }
 }
 
 async function getStudentGradesReport (req, res, next) {
