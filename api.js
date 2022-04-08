@@ -39,7 +39,6 @@ async function getStudentGradesReport (req, res, next) {
     if (!studentGradesAndDetails) {
       return res.status(404).json({ message: 'Student not found' })
     }
-    delete studentGradesAndDetails.password_hash
     res.json(studentGradesAndDetails)
   } catch (e) {
     next(e)
