@@ -23,8 +23,10 @@ async function getHealth (req, res, next) {
 
 async function getStudent (req, res, next) {
   try {
-    const student = await knex('students').where({ id: req.params.id })
-    res.json(student[0])
+    const [student] = await knex('students').where({ id: req.params.id })
+    if (!student) return res.status(404).json({ message: 'Student not found' })
+    delete student.password_hash
+    res.json(student)
   } catch (e) {
     next(e)
   }
@@ -32,7 +34,13 @@ async function getStudent (req, res, next) {
 
 async function getStudentGradesReport (req, res, next) {
   try {
-    res.json(await getStudentGradesAndDetails(grades, req.params.id))
+    const studentGradesAndDetails =
+      await getStudentGradesAndDetails(grades, req.params.id)
+    if (!studentGradesAndDetails) {
+      return res.status(404).json({ message: 'Student not found' })
+    }
+    delete studentGradesAndDetails.password_hash
+    res.json(studentGradesAndDetails)
   } catch (e) {
     next(e)
   }

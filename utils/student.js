@@ -6,10 +6,10 @@ module.exports = {
 
 async function getStudentGradesAndDetails (grades, studentId) {
   const id = Number(studentId)
-  const student = (await knex('students').where({ id: studentId }))
-  if (student.length === 0) return
+  const [student] = (await knex('students').where({ id: studentId }))
+  if (!student) return null
   const studentGrades = grades
     .filter((student) => student.id === id)
     .map(({ grade, course }) => ({ grade, course }))
-  return { ...student[0], grades: studentGrades }
+  return { ...student, grades: studentGrades }
 }
