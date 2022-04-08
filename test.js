@@ -36,7 +36,6 @@ tape('getStudent', async function (t) {
       email: 'Elody67@hotmail.com',
       is_registered: 0,
       is_approved: 1,
-      password_hash: '0190b9d5de6e72fa1a7b45f437a0384fe5c1a112',
       address: '238 Hilll Garden Suite 822',
       city: 'Cheyenne',
       state: 'PA',
@@ -55,11 +54,19 @@ tape('getStudent', async function (t) {
 tape('do not getStudent', async function (t) {
   const url = `${endpoint}/student/-44`
   try {
-    const { data, response } = await jsonist.get(url)
-    if (response.statusCode !== 200) {
-      throw new Error('Error connecting to sqlite database; did you initialize it by running `npm run init-db`?')
-    }
-    t.isEqual(data, null, 'should be null')
+    const { response } = await jsonist.get(url)
+    t.isEqual(404, response.statusCode, 'should be 404')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
+
+tape('do not getStudentGradesAndDetails HTTP', async function (t) {
+  const url = `${endpoint}/student/-44/grades`
+  try {
+    const { response } = await jsonist.get(url)
+    t.isEqual(404, response.statusCode, 'should be 404')
     t.end()
   } catch (e) {
     t.error(e)
@@ -69,7 +76,7 @@ tape('do not getStudent', async function (t) {
 tape('do not getStudentGradesAndDetails', async function (t) {
   const data = await getStudentGradesAndDetails(grades, -2)
   try {
-    t.isEqual(data, undefined, 'should be undefined')
+    t.isEqual(data, null, 'should be null')
     t.end()
   } catch (e) {
     t.error(e)
@@ -86,7 +93,6 @@ tape('getCoursesStats', async function (t) {
       email: 'Floy_Walker@hotmail.com',
       is_registered: 1,
       is_approved: 0,
-      password_hash: '4e2281d392f8b353767918febb9871633b258018',
       address: '5033 Zulauf Common Suite 465',
       city: 'Pomona',
       state: 'NH',
@@ -97,7 +103,46 @@ tape('getCoursesStats', async function (t) {
       ip_address: '47.63.154.15',
       grades: []
     }
+    , data, 'should equal expected student and grades')
+    t.end()
+  } catch (e) {
+    t.error(e)
+  }
+})
 
+tape('getCoursesStats HTTP', async function (t) {
+  const url = `${endpoint}/student/355/grades`
+  try {
+    const { data, response } = await jsonist.get(url)
+    if (response.statusCode !== 200) {
+      throw new Error('Error connecting to sqlite database; did you initialize it by running `npm run init-db`?')
+    }
+    t.deepEqual({
+      id: 355,
+      first_name: 'Torrance',
+      last_name: 'Kuvalis',
+      email: 'Torrance95@yahoo.com',
+      is_registered: 0,
+      is_approved: 0,
+      address: '381 Doug Wall Apt. 055',
+      city: 'Arecibo',
+      state: 'MN',
+      zip: '26662-0061',
+      phone: '803-948-2793',
+      created: '1628710444281.0',
+      last_login: '1628735682989.0',
+      ip_address: '207.143.185.68',
+      grades: [
+        {
+          grade: 17,
+          course: 'Calculus'
+        },
+        {
+          grade: 33,
+          course: 'Microeconomics'
+        }
+      ]
+    }
     , data, 'should equal expected student and grades')
     t.end()
   } catch (e) {
